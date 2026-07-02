@@ -1,0 +1,402 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#7C6FA0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SE Launcher" />
+  <title>Soluções Eficazes — Launcher</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #7C6FA0;
+      --navy-light: #9080B8;
+      --gold: #8B1A3A;
+      --gold-light: #A52248;
+      --white: #1E1433;
+      --gray: #5A4A7A;
+      --card-bg: rgba(255,255,255,0.30);
+      --card-border: rgba(139,26,58,0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* Background texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 100%, rgba(90,70,130,0.9) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 48px 24px 40px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 40px;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px;
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--gray);
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+
+    .greeting {
+      font-size: 13px;
+      color: var(--gray);
+      margin-top: 16px;
+      font-weight: 300;
+    }
+
+    .greeting span {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      margin-top: 32px;
+      opacity: 0.8;
+    }
+
+    /* Cards */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      animation: fadeUp 0.5s ease both;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .card:hover, .card:active {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.4);
+      transform: translateY(-1px);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--white);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-url {
+      font-size: 11px;
+      color: var(--gray);
+      font-weight: 300;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-arrow {
+      color: var(--gold);
+      opacity: 0.5;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Icon backgrounds */
+    .bg-blue   { background: rgba(59,130,246,0.15); }
+    .bg-gold   { background: rgba(139,26,58,0.15); }
+    .bg-green  { background: rgba(34,197,94,0.15); }
+    .bg-purple { background: rgba(168,85,247,0.15); }
+    .bg-red    { background: rgba(239,68,68,0.15); }
+    .bg-teal   { background: rgba(20,184,166,0.15); }
+    .bg-orange { background: rgba(249,115,22,0.15); }
+
+    .card-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: rgba(255,255,255,0.85);
+      fill: none;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Stagger animations */
+    .card:nth-child(1)  { animation-delay: 0.05s; }
+    .card:nth-child(2)  { animation-delay: 0.10s; }
+    .card:nth-child(3)  { animation-delay: 0.15s; }
+    .card:nth-child(4)  { animation-delay: 0.20s; }
+    .card:nth-child(5)  { animation-delay: 0.25s; }
+    .card:nth-child(6)  { animation-delay: 0.30s; }
+    .card:nth-child(7)  { animation-delay: 0.35s; }
+
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 11px;
+      color: rgba(30,20,51,0.5);
+      font-weight: 300;
+      animation: fadeUp 0.5s 0.5s ease both;
+    }
+
+    .gold-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      background: #8B1A3A;
+      border-radius: 50%;
+      margin: 0 6px;
+      vertical-align: middle;
+      opacity: 0.6;
+    }
+
+    /* Animations */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header class="header">
+      <div class="logo-row">
+        <div class="logo-mark">SE</div>
+        <div>
+          <div class="brand-name">Soluções Eficazes</div>
+          <div class="brand-sub">solucoeseficazes.pt</div>
+        </div>
+      </div>
+      <div class="greeting">Bom dia, <span>José</span> — acesso rápido às suas apps</div>
+    </header>
+
+    <div class="section-label">Aplicações</div>
+    <div class="cards">
+
+      <a class="card" href="https://credium.solucoeseficazes.pt/" target="_blank" rel="noopener">
+        <div class="card-icon bg-gold">
+          <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">Credium Prime</div>
+          <div class="card-url">credium.solucoeseficazes.pt</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="card" href="https://quotalis.solucoeseficazes.pt/" target="_blank" rel="noopener">
+        <div class="card-icon bg-blue">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">Quotalis</div>
+          <div class="card-url">quotalis.solucoeseficazes.pt</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="card" href="https://combustivel.solucoeseficazes.pt/" target="_blank" rel="noopener">
+        <div class="card-icon bg-teal">
+          <svg viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.4 5h12.8M10 21a1 1 0 100-2 1 1 0 000 2zm7 0a1 1 0 100-2 1 1 0 000 2z"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">Gestão de Combustível</div>
+          <div class="card-url">combustivel.solucoeseficazes.pt</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="card" href="https://tvde-control-457547611668.europe-west2.run.app/" target="_blank" rel="noopener">
+        <div class="card-icon bg-green">
+          <svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="1"/><path d="M13 15.5h6M13 18.5h4"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">TVDE Alex</div>
+          <div class="card-url">tvde-control…run.app</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="card" href="https://www.appsheet.com/start/c3549cfc-f38e-4a45-b3e1-d432060fcebc" target="_blank" rel="noopener">
+        <div class="card-icon bg-orange">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">Credium Legacy</div>
+          <div class="card-url">appsheet.com</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+    </div>
+
+    <div class="section-label">Portfólio & Site</div>
+    <div class="cards">
+
+      <a class="card" href="https://www.solucoeseficazes.pt/" target="_blank" rel="noopener">
+        <div class="card-icon bg-gold">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">Site Soluções Eficazes</div>
+          <div class="card-url">solucoeseficazes.pt</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="card" href="https://josreb-cmd.github.io/Portfolio/" target="_blank" rel="noopener">
+        <div class="card-icon bg-purple">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">Simuladores Financeiros</div>
+          <div class="card-url">josreb-cmd.github.io/Portfolio</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="card" href="https://josreb-cmd.github.io/tesla-carregamentos/" target="_blank" rel="noopener">
+        <div class="card-icon bg-red">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">Tesla Carregamentos</div>
+          <div class="card-url">josreb-cmd.github.io/tesla-carregamentos</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+      <a class="card" href="https://yeeientxzoera.kimi.page" target="_blank" rel="noopener">
+        <div class="card-icon bg-orange">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="card-text">
+          <div class="card-title">CV Portfolio Kimi</div>
+          <div class="card-url">yeeientxzoera.kimi.page</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </a>
+
+    </div>
+
+    <div class="footer">
+      José Rebelo <span class="gold-dot"></span> Soluções Eficazes <span class="gold-dot"></span> 2026
+    </div>
+
+  </div>
+
+  <script>
+    // Saudação dinâmica
+    const greetingEl = document.querySelector('.greeting');
+    const hour = new Date().getHours();
+    const greet = hour < 12 ? 'Bom dia' : hour < 20 ? 'Boa tarde' : 'Boa noite';
+    greetingEl.innerHTML = `${greet}, <span>José</span> — acesso rápido às suas apps`;
+
+    // Registar Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
