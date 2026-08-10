@@ -1,198 +1,133 @@
-<!doctype html>
-<html lang="pt">
+<!DOCTYPE html>
+<html lang="pt-PT">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#2563eb" />
-  <link rel="manifest" href="manifest.json">
-  <title>Preview PWA — Widgets Launcher</title>
-  <style>
-    :root{
-      --bg1: linear-gradient(180deg,#eef2ff 0%, #e0f2fe 100%);
-      --card:#ffffff;
-      --muted:#475569;
-      --accent:#2563eb;
-      --glass: rgba(255,255,255,0.6);
-    }
-    [data-theme="dark"]{
-      --bg1: linear-gradient(180deg,#071023 0%, #0b1724 100%);
-      --card:#0f1724; --muted:#9ca3af; --accent:#60a5fa; --glass: rgba(15,23,36,0.5);
-    }
-    html,body{height:100%}
-    body{font-family:Inter,Segoe UI,Arial; background:var(--bg1); color:var(--muted); margin:0; padding:24px; -webkit-font-smoothing:antialiased}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soluções Eficazes — Launcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-    h1{font-size:18px;color:var(--muted);margin:0;font-weight:600}
-    .controls{display:flex;gap:10px;align-items:center}
-    .btn{background:linear-gradient(180deg,var(--accent),#1e40af);color:white;border:none;padding:10px 14px;border-radius:12px;cursor:pointer;box-shadow:0 6px 18px rgba(37,99,235,0.18);transition:transform .12s ease}
-    .btn:active{transform:scale(.98)}
-    .secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);padding:8px 10px;border-radius:10px}
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
 
-    .hint{font-size:13px;color:var(--muted);margin-bottom:12px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    .card{position:relative;overflow:hidden;border-radius:14px;padding:14px;display:flex;flex-direction:column;min-height:100px;transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;cursor:grab}
-    .card:active{cursor:grabbing}
-    .card .row{display:flex;align-items:center;gap:12px}
-    .card .icon{width:54px;height:54px;border-radius:12px;flex:0 0 54px;box-shadow:0 8px 20px rgba(2,6,23,0.08);display:flex;align-items:center;justify-content:center}
-    .card .title{font-weight:700;font-size:15px;margin:0;color:var(--muted)}
-    .card .meta{font-size:13px;color:var(--muted);opacity:.9}
-    .card .footer{display:flex;align-items:center;margin-top:auto;gap:8px}
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-    /* sizes */
-    .card.small{height:120px}
-    .card.medium{height:180px}
-    .card.large{height:260px}
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 5px;
+        }
 
-    /* glass layer */
-    .card::before{content:'';position:absolute;inset:0;background:var(--glass);mix-blend-mode:overlay;pointer-events:none}
-    .card .content{position:relative;z-index:2}
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+        }
 
-    /* drag highlight */
-    .outline{box-shadow:0 12px 30px rgba(37,99,235,0.18);transform:translateY(-6px)}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+        }
 
-    /* settings drawer */
-    .settings{position:fixed;right:20px;top:70px;background:var(--card);padding:16px;border-radius:12px;box-shadow:0 20px 40px rgba(2,6,23,0.12);width:320px;transform:translateY(-8px);opacity:0;transition:opacity .18s, transform .18s}
-    .settings.show{opacity:1;transform:translateY(0)}
+        .app-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
-    /* icon badges */
-    .badge{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(0,0,0,0.06);color:var(--muted)}
+        .app-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            border-color: #999;
+        }
 
-    /* subtle animation */
-    @keyframes pop { from{transform:scale(.96);opacity:0.0} to{transform:scale(1);opacity:1} }
-    .card {animation:pop .18s ease both}
-n  </style>
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 10px;
+        }
+
+        .app-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .app-desc {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
 </head>
-<body data-theme="light">
-  <header>
-    <div style="display:flex;align-items:center;gap:12px">
-      <img src="assets/icon.svg" alt="logo" width="40" height="40" style="border-radius:10px;box-shadow:0 8px 20px rgba(2,6,23,0.06)"/>
-      <h1>Launcher — Preview</h1>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Soluções Eficazes</h1>
+            <p class="subtitle">Launcher de Apps</p>
+        </header>
+
+        <div class="grid" id="grid"></div>
     </div>
-    <div class="controls">
-      <button id="addBtn" class="btn">+ Adicionar</button>
-      <button id="themeBtn" class="secondary">Tema: Light</button>
-    </div>
-  </header>
-  <main>
-    <div class="hint">Arrasta para reordenar. Clica no menu para editar. Preview com visual moderno.</div>
-    <div id="grid" class="grid" aria-live="polite"></div>
-  </main>
 
-  <div id="settings" class="settings" role="dialog" aria-modal="true">
-    <h3 style="margin:0 0 12px 0;color:var(--muted)">Configuração do Widget</h3>
-    <div style="margin-bottom:10px">Título: <input id="setTitle" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)"/></div>
-    <div style="margin-bottom:12px">Tamanho:
-      <select id="setSize" style="width:100%;padding:8px;border-radius:8px;margin-top:6px">
-        <option value="small">Pequeno</option>
-        <option value="medium">Médio</option>
-        <option value="large">Grande</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end"><button id="saveCfg" class="btn">Guardar</button><button id="closeCfg" class="secondary">Fechar</button></div>
-  </div>
+    <script>
+        const apps = [
+            {
+                id: 'app1',
+                title: 'App 1',
+                url: 'https://example.com',
+                icon: 'app_music.svg',
+                desc: 'Descrição'
+            },
+            {
+                id: 'app2',
+                title: 'App 2',
+                url: 'https://example.com',
+                icon: 'app_notes.svg',
+                desc: 'Descrição'
+            },
+            {
+                id: 'app3',
+                title: 'App 3',
+                url: 'https://example.com',
+                icon: 'app_music.svg',
+                desc: 'Descrição'
+            }
+        ];
 
-  <script>
-    // register service worker
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(()=>{});
-    }
+        function render() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = apps.map(app => `
+                <div class="app-card" onclick="window.open('${app.url}', '_blank')">
+                    <img src="./assets/${app.icon}" alt="${app.title}" class="app-icon">
+                    <div class="app-title">${app.title}</div>
+                    <div class="app-desc">${app.desc}</div>
+                </div>
+            `).join('');
+        }
 
-    const GRID_KEY = 'widgets_preview_layout_v1'
-    const defaultWidgets = [
-      {id:'w-1',title:'Atalhos',size:'small',desc:'Apps favoritas',icon:'assets/app_shortcuts.svg'},
-      {id:'w-2',title:'Música',size:'medium',desc:'Playlists',icon:'assets/app_music.svg'},
-      {id:'w-3',title:'Clima',size:'small',desc:'Previsão',icon:'assets/app_weather.svg'},
-      {id:'w-4',title:'Notas',size:'large',desc:'Checklists',icon:'assets/app_notes.svg'}
-    ]
-
-    let widgets = load() || defaultWidgets
-    const grid = document.getElementById('grid')
-    const themeBtn = document.getElementById('themeBtn')
-    const addBtn = document.getElementById('addBtn')
-    const settings = document.getElementById('settings')
-    const setTitle = document.getElementById('setTitle')
-    const setSize = document.getElementById('setSize')
-    const saveCfg = document.getElementById('saveCfg')
-    const closeCfg = document.getElementById('closeCfg')
-    let editingId = null
-
-    function save(){ localStorage.setItem(GRID_KEY, JSON.stringify(widgets)) }
-    function load(){ try { return JSON.parse(localStorage.getItem(GRID_KEY)) } catch(e){ return null } }
-
-    function render(){
-      grid.innerHTML = ''
-      widgets.forEach(w=>{
-        const el = document.createElement('div')
-        el.className = `card ${w.size}`
-        el.draggable = true
-        el.dataset.id = w.id
-        const icon = `<div class="icon"><img src="${w.icon||'assets/icon.svg'}" width="40" height="40"/></div>`
-        el.innerHTML = `<div class="content"><div class="row">${icon}<div style=\"flex:1\"><div class=\"title\">${w.title}</div><div class=\"meta\">${w.desc}</div></div></div><div class=\"footer\"><span class=\"badge\">${w.size}</span><span style=\"margin-left:auto;cursor:pointer\" aria-label=\"menu\">⋮</span></div></div>`
-        grid.appendChild(el)
-
-        el.querySelector('[aria-label="menu"]').addEventListener('click', ()=>openSettings(w.id))
-        addDragHandlers(el)
-      })
-    }
-
-    function addDragHandlers(el){
-      el.addEventListener('dragstart', e=>{
-        e.dataTransfer.setData('text/plain', el.dataset.id)
-        el.classList.add('outline')
-      })
-      el.addEventListener('dragend', ()=>el.classList.remove('outline'))
-      el.addEventListener('dragover', e=>{ e.preventDefault(); el.style.transform='scale(1.02)'} )
-      el.addEventListener('dragleave', e=>{ el.style.transform='' })
-      el.addEventListener('drop', e=>{
-        e.preventDefault()
-        el.style.transform=''
-        const srcId = e.dataTransfer.getData('text/plain')
-        const tgtId = el.dataset.id
-        reorder(srcId,tgtId)
-      })
-    }
-
-    function reorder(srcId,tgtId){
-      const from = widgets.findIndex(w=>w.id===srcId)
-      const to = widgets.findIndex(w=>w.id===tgtId)
-      if(from<0||to<0||from===to) return
-      const [item] = widgets.splice(from,1)
-      widgets.splice(to,0,item)
-      save(); render()
-    }
-
-    function openSettings(id){
-      editingId = id
-      const w = widgets.find(x=>x.id===id)
-      setTitle.value = w.title
-      setSize.value = w.size
-      settings.classList.add('show')
-    }
-    saveCfg.addEventListener('click', ()=>{
-      const w = widgets.find(x=>x.id===editingId)
-      if(!w) return
-      w.title = setTitle.value || w.title
-      w.size = setSize.value
-      save(); settings.classList.remove('show'); render()
-    })
-    closeCfg.addEventListener('click', ()=>settings.classList.remove('show'))
-
-    addBtn.addEventListener('click', ()=>{
-      const id = 'w-'+Math.random().toString(36).slice(2,9)
-      widgets.push({id,title:'Novo widget',size:'small',desc:'Descrição rápida',icon:'assets/app_shortcuts.svg'})
-      save(); render()
-    })
-
-    themeBtn.addEventListener('click', ()=>{
-      const body = document.body
-      const current = body.getAttribute('data-theme')
-      if(current==='light'){ body.setAttribute('data-theme','dark'); themeBtn.textContent='Tema: Dark'}
-      else{ body.setAttribute('data-theme','light'); themeBtn.textContent='Tema: Light' }
-    })
-
-    // initial render
-    render()
-  </script>
+        render();
+    </script>
 </body>
 </html>
