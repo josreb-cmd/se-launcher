@@ -71,6 +71,9 @@
     </div>
     <div class="controls">
       <button id="addBtn" class="btn">+ Adicionar</button>
+      <button id="importBtn" class="secondary">Importar</button>
+      <button id="exportBtn" class="secondary">Exportar</button>
+      <input id="fileInput" type="file" accept=".json" style="display:none" />
       <button id="themeBtn" class="secondary">Tema: Light</button>
     </div>
   </header>
@@ -99,17 +102,30 @@
     }
 
     const GRID_KEY = 'widgets_preview_layout_v1'
-    const defaultWidgets = [
-      {id:'w-1',title:'Atalhos',size:'small',desc:'Apps favoritas',icon:'assets/app_shortcuts.svg'},
-      {id:'w-2',title:'Música',size:'medium',desc:'Playlists',icon:'assets/app_music.svg'},
-      {id:'w-3',title:'Clima',size:'small',desc:'Previsão',icon:'assets/app_weather.svg'},
-      {id:'w-4',title:'Notas',size:'large',desc:'Checklists',icon:'assets/app_notes.svg'}
-    ]
+    const APPS_JSON = 'apps.json'
+
+    async function loadAppsJson(){
+      try{
+        const resp = await fetch(APPS_JSON,{cache:'no-store'})
+        if(!resp.ok) return null
+        return await resp.json()
+      }catch(e){return null}
+    }
+
+    const defaultWidgets = await (async ()=>{ const a = await loadAppsJson(); return a||[
+      {id:'w-1',title:'Atalhos',size:'small',desc:'Apps favoritas',icon:'assets/app_shortcuts.svg',url:'#'},
+      {id:'w-2',title:'Música',size:'medium',desc:'Playlists',icon:'assets/app_music.svg',url:'#'},
+      {id:'w-3',title:'Clima',size:'small',desc:'Previsão',icon:'assets/app_weather.svg',url:'#'},
+      {id:'w-4',title:'Notas',size:'large',desc:'Checklists',icon:'assets/app_notes.svg',url:'#'}
+    ] })()
 
     let widgets = load() || defaultWidgets
     const grid = document.getElementById('grid')
     const themeBtn = document.getElementById('themeBtn')
     const addBtn = document.getElementById('addBtn')
+    const importBtn = document.getElementById('importBtn')
+    const exportBtn = document.getElementById('exportBtn')
+    const fileInput = document.getElementById('fileInput')
     const settings = document.getElementById('settings')
     const setTitle = document.getElementById('setTitle')
     const setSize = document.getElementById('setSize')
@@ -119,6 +135,10 @@
 
     function save(){ localStorage.setItem(GRID_KEY, JSON.stringify(widgets)) }
     function load(){ try { return JSON.parse(localStorage.getItem(GRID_KEY)) } catch(e){ return null } }
+
+    function openUrl(url){
+      window.open(url, '_blank')
+    }
 
     function render(){
       grid.innerHTML = ''
@@ -132,6 +152,7 @@
         grid.appendChild(el)
 
         el.querySelector('[aria-label="menu"]').addEventListener('click', ()=>openSettings(w.id))
+        el.addEventListener('dblclick', ()=>{ if(w.url) openUrl(w.url) })
         addDragHandlers(el)
       })
     }
@@ -180,7 +201,7 @@
 
     addBtn.addEventListener('click', ()=>{
       const id = 'w-'+Math.random().toString(36).slice(2,9)
-      widgets.push({id,title:'Novo widget',size:'small',desc:'Descrição rápida',icon:'assets/app_shortcuts.svg'})
+      widgets.push({id,title:'Novo widget',size:'small',desc:'Descrição rápida',icon:'assets/app_shortcuts.svg',url:'#'})
       save(); render()
     })
 
@@ -189,6 +210,23 @@
       const current = body.getAttribute('data-theme')
       if(current==='light'){ body.setAttribute('data-theme','dark'); themeBtn.textContent='Tema: Dark'}
       else{ body.setAttribute('data-theme','light'); themeBtn.textContent='Tema: Light' }
+    })
+
+    importBtn.addEventListener('click', ()=> fileInput.click())
+    fileInput.addEventListener('change', e=>{
+      const f = e.target.files[0]
+      if(!f) return
+      const reader = new FileReader()
+      reader.onload = ()=>{
+        try{ const data = JSON.parse(reader.result); if(Array.isArray(data)){ widgets = data; save(); render(); } }catch(e){ alert('Ficheiro inválido') }
+      }
+      reader.readAsText(f)
+    })
+
+    exportBtn.addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(widgets,null,2)],{type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'apps.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     })
 
     // initial render
