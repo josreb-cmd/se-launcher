@@ -1,9 +1,0 @@
-[
-  {
-    "id": "app-1",
-    "title": "Email",
-    "url": "https://mail.example.com",
-    "icon": "assets/app_shortcuts.svg",
-    "size": "small"
-  }
-]
