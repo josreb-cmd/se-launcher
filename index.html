@@ -73,8 +73,8 @@ a { text-decoration: none; color: inherit; }
 .section-label { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; font-weight: 500; color: var(--text-m); padding: 10px 16px 6px; }
 
 .small-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; padding: 0 16px 24px; }
-.small-card { background: var(--white); border: 0.5px solid var(--sky-d); border-radius: 10px; padding: 11px 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: border-color .15s; -webkit-tap-highlight-color: transparent; }
-.small-card:hover, .small-card:focus-visible { border-color: var(--blue); outline: none; }
+.small-card { background: var(--sky); border: 1px solid var(--sky-b); border-radius: 10px; padding: 11px 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; box-shadow: 0 1px 3px rgba(30,58,95,.08); transition: border-color .15s, box-shadow .15s, transform .15s; -webkit-tap-highlight-color: transparent; }
+.small-card:hover, .small-card:focus-visible { border-color: var(--blue); box-shadow: 0 2px 6px rgba(30,58,95,.14); transform: translateY(-1px); outline: none; }
 .small-card:active { opacity: .8; }
 .small-icon { width: 28px; height: 28px; border-radius: 6px; background: var(--sky); display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 13px; flex-shrink: 0; }
 .small-title { color: var(--navy); font-size: 11px; font-weight: 500; line-height: 1.3; }
@@ -150,19 +150,19 @@ a { text-decoration: none; color: inherit; }
         <span class="pill live"><span class="pill-dot"></span>ativo</span>
       </div>
     </a>
-    <a class="big-card" href="https://josreb-cmd.github.io/tesla-carregamentos/" target="_blank" rel="noopener" tabindex="0">
-      <div class="big-icon"><i class="ti ti-bolt" aria-hidden="true"></i></div>
+    <a class="big-card" href="https://credium.solucoeseficazes.pt" target="_blank" rel="noopener" tabindex="0">
+      <div class="big-icon"><i class="ti ti-building-bank" aria-hidden="true"></i></div>
       <div>
-        <div class="big-title">Tesla Carregamento</div>
-        <div class="big-sub">josreb-cmd.github.io</div>
+        <div class="big-title">Credium Prime</div>
+        <div class="big-sub">credium.solucoeseficazes.pt</div>
         <span class="pill live"><span class="pill-dot"></span>ativo</span>
       </div>
     </a>
-    <a class="big-card" href="https://solucoeseficazes.pt/simuladores" target="_blank" rel="noopener" tabindex="0">
+    <a class="big-card" href="https://simuladores.solucoeseficazes.pt/" target="_blank" rel="noopener" tabindex="0">
       <div class="big-icon"><i class="ti ti-calculator" aria-hidden="true"></i></div>
       <div>
         <div class="big-title">Simuladores</div>
-        <div class="big-sub">solucoeseficazes.pt</div>
+        <div class="big-sub">https://simuladores.solucoeseficazes.pt/</div>
         <span class="pill live"><span class="pill-dot"></span>4 ferramentas BdP</span>
       </div>
     </a>
@@ -183,10 +183,6 @@ a { text-decoration: none; color: inherit; }
     <a class="small-card" href="https://combustivel.solucoeseficazes.pt" target="_blank" rel="noopener" tabindex="0">
       <div class="small-icon"><i class="ti ti-gas-station" aria-hidden="true"></i></div>
       <div><div class="small-title">Gestão de Combustível</div><div class="small-sub">combustivel.solucoeseficazes.pt</div></div>
-    </a>
-    <a class="small-card" href="https://credium.solucoeseficazes.pt" target="_blank" rel="noopener" tabindex="0">
-      <div class="small-icon"><i class="ti ti-building-bank" aria-hidden="true"></i></div>
-      <div><div class="small-title">Credium Prime</div><div class="small-sub">credium.solucoeseficazes.pt</div></div>
     </a>
     <a class="small-card" href="https://www.appsheet.com/start/c3549cfc-f38e-4a45-b3e1-d432060fcebc" target="_blank" rel="noopener" tabindex="0">
       <div class="small-icon"><i class="ti ti-history" aria-hidden="true"></i></div>
